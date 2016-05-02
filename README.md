@@ -15,16 +15,18 @@ pip install netaddr
 ## Usage
 
 ```
-usage: cymru-asnmap.py [-h] [-f] [-o FILENAME] target
+usage: cymru-asnmap.py [-h] [-f] [-t TIMEOUT] [-o FILENAME] target
 
 positional arguments:
-  target                Target to be queried.
+  target                Target to be queried (CIDR or filename).
 
 optional arguments:
   -h, --help            show this help message and exit
-  -f, --file            Load IPs from a file.
+  -f, --file            Loads the IPs from a file.
+  -t TIMEOUT, --timeout TIMEOUT
+                        Timeout (default is 5).
   -o FILENAME, --output FILENAME
-                        Output CSV file.
+                        Output CSV file
 ```
 
 ### Examples

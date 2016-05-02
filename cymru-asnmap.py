@@ -55,20 +55,27 @@ def to_csv(data, filename):
                                 for column in line.split("|")])
 
 
-def query(bulk_query):
+def query(bulk_query, timeout):
     """ Connects to the whois server and sends the bulk query. Returns the
     result of this query.
     """
     try:
+        data = ""
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(timeout)
         s.connect(("whois.cymru.com", 43))
         s.sendall(bulk_query)
-        reply = s.recv(1024)
+        reply = s.recv(4098)
         data = reply
         # Gets data until an empty line is found.
-        while reply:
+        while True:
             reply = s.recv(1024)
             data += reply
+    except socket.timeout:
+        if data != '':
+            pass
+        else:
+            raise
     except Exception as e:
         raise e
     finally:
@@ -83,6 +90,8 @@ def main():
         parser.add_argument("target", help="Target to be queried (CIDR or filename).")
         parser.add_argument("-f", "--file", help="Loads the IPs from a file.",
                             dest="from_file", action="store_true")
+        parser.add_argument("-t", "--timeout", type=int, dest="timeout",
+                            default=5, help="Timeout (default is 5).")
         parser.add_argument("-o", "--output", help="Output CSV file.",
                             dest="filename")
         args = parser.parse_args()
@@ -102,7 +111,7 @@ def main():
         # Creates the file for bulk submission
         bulk_query = "begin\nverbose\n%s\nend" % ips
 
-        response = query(bulk_query)
+        response = query(bulk_query, args.timeout)
 
         print response
 
