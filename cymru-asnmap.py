@@ -116,9 +116,10 @@ def main():
         print response
 
         to_csv(response, filename)
+        print "Output saved to: %s" % filename
 
     except Exception as e:
-        print "[!] Unable to proceed. Error: %s" % e
+        print "Unable to proceed. Error: %s" % e
 
 if __name__ == '__main__':
     main()
