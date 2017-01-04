@@ -56,5 +56,5 @@ Bulk mode; whois.cymru.com [2016-05-02 04:34:05 +0000]
 ```
 
 # License
-* Copyright (c) 2016, Daniel C. Marques - Check the LICENSE file for license.
+* Copyright (c) 2017, Daniel C. Marques - Check the LICENSE file for license.
 * Team Cymru WHOIS Copyright (c) 2015 Team Cymru. All Rights Reserved.
