@@ -43,7 +43,7 @@ def to_csv(data, filename):
     """ Parses and cleans up the query response and generates a CSV file with
     the result.
     """
-    with open(filename, "wb") as csvfile:
+    with open(filename, "w") as csvfile:
         csvwriter = csv.writer(csvfile, delimiter=';',
                                quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
@@ -60,11 +60,11 @@ def query(bulk_query, timeout):
     result of this query.
     """
     try:
-        data = ""
+        data = b''
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.settimeout(timeout)
         s.connect(("whois.cymru.com", 43))
-        s.sendall(bulk_query)
+        s.sendall(bulk_query.encode())
         reply = s.recv(4098)
         data = reply
         # Gets data until an empty line is found.
@@ -81,7 +81,7 @@ def query(bulk_query, timeout):
     finally:
         s.close()
 
-    return data
+    return data.decode()
 
 
 def main():
@@ -102,7 +102,7 @@ def main():
             filename = "output-asnmap.csv"
 
         if args.from_file:
-            with open(args.target, "rb") as input_file:
+            with open(args.target, "r") as input_file:
                 ips = input_file.read().rstrip("\n")
         else:
             net = IPNetwork(args.target)
@@ -113,13 +113,14 @@ def main():
 
         response = query(bulk_query, args.timeout)
 
-        print response
+        print(response)
 
         to_csv(response, filename)
-        print "Output saved to: %s" % filename
+        print("Output saved to: %s" % filename)
 
     except Exception as e:
-        print "Unable to proceed. Error: %s" % e
+        print("Unable to proceed. Error: %s" % e)
+
 
 if __name__ == '__main__':
     main()
